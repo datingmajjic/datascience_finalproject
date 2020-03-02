@@ -12,6 +12,7 @@ con = sqlite3.connect("census_stuff.db")
 c = con.cursor()
 c.execute('DROP TABLE IF EXISTS "people";')
 c.execute('DROP TABLE IF EXISTS "matchKaggleEduc";')
+c.execute('DROP TABLE IF EXISTS "matchKaggleCareer";')
 # drop data into database
 df.to_sql("people", con)
 
@@ -215,9 +216,137 @@ c.execute(command8)
 #now do careers
 #########
 
+#start converting eduction to right values
+command_matchTableC = '''
+CREATE TABLE matchKaggleCareer(
+    censusID INT,
+    kaggleID INT,
+    minVAL INT,
+    maxVAL INT
+);
+'''
+command_insertValC = '''
+INSERT INTO matchKaggleCareer
+    (censusID, kaggleID, minVAL, maxVAL)
+VALUES
+    ( NULL, 1, 2100, 2140),
+    (NULL, 2, 1600, 1860),
+    (1820, 3, NULL, NULL),
+    (NULL, 4, 3000, 3540),
+    (NULL, 4, 3600, 3655),
+    (NULL, 5, 1310, 1560),
+    (NULL, 5, 1000, 1240),
+    (NULL, 6, 2600, 2920),
+    (NULL, 7, 0010, 0430),
+    (NULL, 7, 0500, 0740),
+    (NULL, 7, 0800, 0950),
+    (NULL, 7, 4700, 4965),
+    (4920, 8, NULL, NULL),
+    (0810, 8, NULL, NULL),
+    (NULL, 11, 2000, 2060),
+    (NULL, 11, 3700, 3950),
+    (4650, 11, NULL, NULL),
+    (3230, 12, NULL, NULL),
+    (2720, 14, NULL, NULL),
+    (NULL, 15, 1900, 1965),
+    (1840, 15, NULL, NULL),
+    (NULL, 15, 2200, 2550),
+    (NULL, 15, 4000, 4150),
+    (NULL, 15, 4200, 4250),
+    (NULL, 15, 4300, 4640),
+    (NULL, 15, 5000, 5940),
+    (NULL, 15, 6000, 6130),
+    (NULL, 15, 6200, 6940),
+    (NULL, 15, 7000, 7610),
+    (NULL, 15, 7700, 8950),
+    (NULL, 15, 9000, 9750),
+    (NULL, 15, 9800, 9920),
+    (2810, 16, NULL, NULL),
+    (2840, 16, NULL, NULL),
+    (2850, 16, NULL, NULL),
+    (1300, 16, NULL, NULL);
+'''
+
+c.execute(command_matchTableC);
+c.execute(command_insertValC);
 
 
+con.commit()
+#########
+#add columns for careers and join
+command5C = '''
+ALTER TABLE people
+ADD COLUMN kagOCC INT;
+'''
+command6C = '''
+ALTER TABLE people
+ADD COLUMN kagOCC_SP INT;
+'''
 
+command7C1 = '''
+UPDATE people
+SET kagOCC =(
+    SELECT kaggleID
+    FROM matchKaggleCareer as m
+    WHERE m.censusID IS NOT NULL AND people.OCC = m.censusID
+);
+'''
+command7C2 = '''
+UPDATE people
+
+SET kagOCC = (
+    SELECT m.kaggleID
+    FROM matchKaggleCareer as m
+    WHERE
+    (m.maxVAL IS NOT NULL
+    AND m.minVAL IS NOT NULL
+    AND (people.OCC <= m.maxVAL
+    AND people.OCC >= m.minVAL))
+)
+WHERE people.kagOCC IS NULL
+;
+'''
+
+command8C1 = '''
+UPDATE people
+SET kagOCC_SP =(
+    SELECT kaggleID
+    FROM matchKaggleCareer as m
+    WHERE m.censusID IS NOT NULL AND people.OCC_SP = m.censusID
+);
+'''
+command8C2 = '''
+UPDATE people
+
+SET kagOCC_SP = (
+    SELECT m.kaggleID
+    FROM matchKaggleCareer as m
+    WHERE
+    (m.maxVAL IS NOT NULL
+    AND m.minVAL IS NOT NULL
+    AND (people.OCC_SP <= m.maxVAL
+    AND people.OCC_SP >= m.minVAL))
+)
+WHERE people.kagOCC_SP IS NULL
+;
+'''
+
+# command8C = '''
+# UPDATE people
+# SET kagOCC_SP =(
+#     SELECT kaggleID
+#     FROM matchKaggleCareer as m
+#     WHERE people.OCC_SP = m.censusID
+# );
+#
+# '''
+
+c.execute(command5C)
+c.execute(command6C)
+c.execute(command7C1)
+c.execute(command7C2)
+c.execute(command8C1)
+c.execute(command8C2)
 
 
 con.commit()
