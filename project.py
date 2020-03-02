@@ -84,13 +84,15 @@ c.execute(command3_delete_spouse)
 command_onlyGrad = '''
 SELECT EDUCD, EDUCD_SP
 FROM people
-WHERE (EDUCD_SP = 114 OR  EDUCD_SP = 115 OR EDUCD_SP = 115)
-AND (EDUCD = 114 OR  EDUCD = 115 OR EDUCD = 115)
+WHERE (EDUCD_SP = 114 OR  EDUCD_SP = 115 OR EDUCD_SP = 116)
+AND (EDUCD = 114 OR  EDUCD = 115 OR EDUCD = 116)
 '''
 #print out database rows of only masters/grad students
 c.execute(command_onlyGrad)
 for r in c:
     print(r)
+
+
 
 
 
