@@ -11,6 +11,7 @@ con = sqlite3.connect("census_stuff.db")
 
 c = con.cursor()
 c.execute('DROP TABLE IF EXISTS "people";')
+c.execute('DROP TABLE IF EXISTS "matchKaggleEduc";')
 # drop data into database
 df.to_sql("people", con)
 
@@ -110,23 +111,114 @@ WHERE DEGFIELD = 0 OR DEGFIELD_SP = 0
 c.execute(command_hasDeg)
 
 
-#print out database rows
-c.execute(command1)
-for r in c:
-    print(r)
 
-# command_convert_educ = '''
+
+#start converting eduction to right values
+command_matchTable = '''
+CREATE TABLE matchKaggleEduc(
+    kaggleID INT,
+    censusID INT
+);
+'''
+command_insertVal = '''
+INSERT INTO matchKaggleEduc
+    (censusID, kaggleID)
+VALUES
+    (32,1),
+    (37,2),
+    (55,3),
+    (52,3),
+    (61,4),
+    (25,5),
+    (24,5),
+    (21,5),
+    (20,5),
+    (34,6),
+    (33,6),
+    (64,7),
+    (49,7),
+    (19,8),
+    (48,7),
+    (15,7),
+    (62,19),
+    (23,9),
+    (50,10),
+    (51,10),
+    (36,10),
+    (11,10),
+    (13,10),
+    (54,13),
+    (60,15),
+    (26,16),
+    (14,17),
+    (59,18),
+    (57,18),
+    (56,18),
+    (53,18),
+    (41,18),
+    (40,18),
+    (38,18),
+    (35,18),
+    (29,18),
+    (22,18);
+'''
+
+c.execute(command_matchTable);
+c.execute(command_insertVal);
+
+
+# command_joinTables = '''
 # SELECT *
-# FROM people
-# WHERE DEGFIELD <>0 AND DEGFIELD_SP <>0
-#
+# FROM people as p
+# LEFT JOIN matchKaggleEduc as m
+# ON p.DEGFIELD = m.censusID
 # '''
-# c.execute(command_convert_educ)
-# for r in c:
-#     print(r)
+# c.execute(command_joinTables)
+
+
+
+command5 = '''
+ALTER TABLE people
+ADD COLUMN kagEDUC INT;
+'''
+command6 = '''
+ALTER TABLE people
+ADD COLUMN kagEDUC_SP INT;
+'''
+
+command7 = '''
+UPDATE people
+SET kagEDUC =(
+    SELECT kaggleID
+    FROM matchKaggleEduc as m
+    WHERE people.DEGFIELD = m.censusID
+);
+'''
+
+command8 = '''
+UPDATE people
+SET kagEDUC_SP =(
+    SELECT kaggleID
+    FROM matchKaggleEduc as m
+    WHERE people.DEGFIELD_SP = m.censusID
+);
+
+'''
+
+c.execute(command5)
+c.execute(command6)
+c.execute(command7)
+c.execute(command8)
+
+
+#########
+#now do careers
+#########
 
 
 
 
 
+
+con.commit()
 con.close()
