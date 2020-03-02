@@ -229,6 +229,7 @@ command_insertValC = '''
 INSERT INTO matchKaggleCareer
     (censusID, kaggleID, minVAL, maxVAL)
 VALUES
+    (0, 0, NULL, NULL),
     ( NULL, 1, 2100, 2140),
     (NULL, 2, 1600, 1860),
     (1820, 3, NULL, NULL),
@@ -330,16 +331,6 @@ SET kagOCC_SP = (
 WHERE people.kagOCC_SP IS NULL
 ;
 '''
-
-# command8C = '''
-# UPDATE people
-# SET kagOCC_SP =(
-#     SELECT kaggleID
-#     FROM matchKaggleCareer as m
-#     WHERE people.OCC_SP = m.censusID
-# );
-#
-# '''
 
 c.execute(command5C)
 c.execute(command6C)
