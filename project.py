@@ -2,7 +2,7 @@ import sqlite3
 import pandas as pd
 
 # load data
-df = pd.read_csv('census_2009-10.csv')
+df = pd.read_csv('census_19-10.csv')
 
 # strip whitespace from headers
 df.columns = df.columns.str.strip()
@@ -81,17 +81,49 @@ c.execute(command3_delete_spouse)
 # for r in c:
 #     print(r)
 
+# command_onlyGrad = '''
+# SELECT *
+# FROM people
+# WHERE (EDUCD_SP = 114 OR  EDUCD_SP = 115 OR EDUCD_SP = 116)
+# AND (EDUCD = 114 OR  EDUCD = 115 OR EDUCD = 116)
+#
+# '''
+# #print out database rows of only masters/grad students
+# c.execute(command_onlyGrad)
+# for r in c:
+#     print(r)
+
 command_onlyGrad = '''
-SELECT EDUCD, EDUCD_SP
+DELETE
 FROM people
-WHERE (EDUCD_SP = 114 OR  EDUCD_SP = 115 OR EDUCD_SP = 116)
-AND (EDUCD = 114 OR  EDUCD = 115 OR EDUCD = 116)
+WHERE (EDUCD_SP <> 114 AND EDUCD_SP <> 115 AND EDUCD_SP <> 116)
+OR (EDUCD <> 114 AND EDUCD <> 115 AND EDUCD <> 116)
 '''
-#print out database rows of only masters/grad students
 c.execute(command_onlyGrad)
+
+
+command_hasDeg = '''
+DELETE
+FROM people
+WHERE DEGFIELD = 0 OR DEGFIELD_SP = 0
+'''
+c.execute(command_hasDeg)
+
+
+#print out database rows
+c.execute(command1)
 for r in c:
     print(r)
 
+# command_convert_educ = '''
+# SELECT *
+# FROM people
+# WHERE DEGFIELD <>0 AND DEGFIELD_SP <>0
+#
+# '''
+# c.execute(command_convert_educ)
+# for r in c:
+#     print(r)
 
 
 
