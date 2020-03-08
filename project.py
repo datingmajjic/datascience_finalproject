@@ -13,15 +13,18 @@ c = con.cursor()
 c.execute('DROP TABLE IF EXISTS "people";')
 c.execute('DROP TABLE IF EXISTS "matchKaggleEduc";')
 c.execute('DROP TABLE IF EXISTS "matchKaggleCareer";')
+c.execute('DROP TABLE IF EXISTS "original";')
+c.execute('DROP TABLE IF EXISTS "actual_original";')
 # drop data into database
-df.to_sql("people", con)
+# df.to_sql("actual_original", con)
+df.to_sql("original", con)
 
 
 command1 = '''
 SELECT
   *
 FROM
-  people
+  original
 ;
 '''
 
@@ -57,7 +60,7 @@ FROM
 #delete rows where spouse is none
 command3_delete_spouse = '''
 DELETE
-FROM people
+FROM original
 WHERE (EDUC_SP IS NULL)
 OR (FAMUNIT_SP IS NULL)
 OR (SPLOC_SP IS NULL)
@@ -78,26 +81,9 @@ OR (INCWAGE_SP IS NULL)
 '''
 c.execute(command3_delete_spouse)
 
-#print out database rows
-# c.execute(command1)
-# for r in c:
-#     print(r)
-
-# command_onlyGrad = '''
-# SELECT *
-# FROM people
-# WHERE (EDUCD_SP = 114 OR  EDUCD_SP = 115 OR EDUCD_SP = 116)
-# AND (EDUCD = 114 OR  EDUCD = 115 OR EDUCD = 116)
-#
-# '''
-# #print out database rows of only masters/grad students
-# c.execute(command_onlyGrad)
-# for r in c:
-#     print(r)
-
 command_onlyGrad = '''
 DELETE
-FROM people
+FROM original
 WHERE (EDUCD_SP <> 114 AND EDUCD_SP <> 115 AND EDUCD_SP <> 116)
 OR (EDUCD <> 114 AND EDUCD <> 115 AND EDUCD <> 116)
 '''
@@ -106,13 +92,40 @@ c.execute(command_onlyGrad)
 
 command_hasDeg = '''
 DELETE
-FROM people
+FROM original
 WHERE DEGFIELD = 0 OR DEGFIELD_SP = 0
 '''
 c.execute(command_hasDeg)
 
 
+command9 = '''
+CREATE TABLE people(
+    YEAR INT,
+    SAMPLE INT,
+    SERIAL INT,
+    PERNUM INT,
+    BIRTHYR INT,
+    EDUCD INT,
+    DEGFIELD INT,
+    OCC INT,
+    BIRTHYR_SP INT,
+    EDUCD_SP INT,
+    DEGFIELD_SP INT,
+    OCC_SP INT,
+    SEX INT,
+    SEX_SP INT
+);
+'''
+command10 = '''
+INSERT INTO people (YEAR, SAMPLE, SERIAL, PERNUM, BIRTHYR, EDUCD, DEGFIELD, OCC, BIRTHYR_SP, EDUCD_SP, DEGFIELD_SP, OCC_SP, SEX, SEX_SP)
+SELECT
+YEAR, SAMPLE, SERIAL, PERNUM, BIRTHYR, EDUCD, DEGFIELD, OCC, BIRTHYR_SP, EDUCD_SP, DEGFIELD_SP, OCC_SP, SEX, SEX_SP
+FROM original
+;
+'''
 
+c.execute(command9)
+c.execute(command10)
 
 #start converting eduction to right values
 command_matchTable = '''
@@ -168,15 +181,6 @@ c.execute(command_matchTable);
 c.execute(command_insertVal);
 
 
-# command_joinTables = '''
-# SELECT *
-# FROM people as p
-# LEFT JOIN matchKaggleEduc as m
-# ON p.DEGFIELD = m.censusID
-# '''
-# c.execute(command_joinTables)
-
-
 
 command5 = '''
 ALTER TABLE people
@@ -212,6 +216,7 @@ c.execute(command7)
 c.execute(command8)
 
 
+
 #########
 #now do careers
 #########
@@ -225,6 +230,10 @@ CREATE TABLE matchKaggleCareer(
     maxVAL INT
 );
 '''
+
+
+
+#kaggleID 0 is unemployed, I added this bc interesting
 command_insertValC = '''
 INSERT INTO matchKaggleCareer
     (censusID, kaggleID, minVAL, maxVAL)
@@ -238,7 +247,7 @@ VALUES
     (NULL, 5, 1310, 1560),
     (NULL, 5, 1000, 1240),
     (NULL, 6, 2600, 2920),
-    (NULL, 7, 0010, 0430),
+    (NULL, 7, 0020, 0430),
     (NULL, 7, 0500, 0740),
     (NULL, 7, 0800, 0950),
     (NULL, 7, 4700, 4965),
@@ -248,6 +257,7 @@ VALUES
     (NULL, 11, 3700, 3950),
     (4650, 11, NULL, NULL),
     (3230, 12, NULL, NULL),
+    (0010, 13, NULL, NULL),
     (2720, 14, NULL, NULL),
     (NULL, 15, 1900, 1965),
     (1840, 15, NULL, NULL),
@@ -338,6 +348,9 @@ c.execute(command7C1)
 c.execute(command7C2)
 c.execute(command8C1)
 c.execute(command8C2)
+con.commit()
+
+
 
 
 con.commit()
