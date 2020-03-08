@@ -1,5 +1,7 @@
 import sqlite3
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 
 # load data
 df = pd.read_csv('census_19-10.csv')
@@ -154,7 +156,7 @@ VALUES
     (19,8),
     (48,7),
     (15,7),
-    (62,19),
+    (62,8),
     (23,9),
     (50,10),
     (51,10),
@@ -351,7 +353,120 @@ c.execute(command8C2)
 con.commit()
 
 
+# MAKING GRAPHS FOR DISTRIBUTION OF COLLEGE MAJORS
+#(Based on ACS codes)
+command1 = '''
+SELECT
+  DEGFIELD, COUNT(DEGFIELD)
+FROM
+  people
+GROUP BY
+    DEGFIELD
+;
+'''
+
+# c.execute(command1)
+# degrees = []
+# num_per_degree = []
+# for r in c:
+#     degrees.append(str(r[0]))
+#     num_per_degree.append(r[1])
+#
+# x_pos = np.arange(len(degrees))
+# plt.bar(degrees, num_per_degree, align='center', alpha=0.5)
+# plt.title('Distribution of College Degree Fields for Married Individuals in New York who have obtained a degree higher than a Bachelor’s')
+# plt.ylabel('Number of people')
+# plt.xlabel('College Degree Field Code (based on ACS PUMS data)')
+# xlocs, xlabs = plt.xticks()
+# for i, v in enumerate(num_per_degree):
+#     plt.text(xlocs[i] - 0.5, v + 0.01, str(v))
+# plt.show()
+
+#(Based on Kaggle codes)
+command1 = '''
+SELECT
+  kagEDUC, COUNT(kagEDUC)
+FROM
+  people
+GROUP BY
+    kagEDUC
+;
+'''
+# c.execute(command1)
+# degrees = []
+# num_per_degree = []
+# for r in c:
+#     if r[0]!=None:
+#         degrees.append(str(r[0]))
+#         num_per_degree.append(r[1])
+#
+# x_pos = np.arange(len(degrees))
+# plt.bar(degrees, num_per_degree, align='center', alpha=0.5)
+# plt.title('Distribution of College Degree Fields for Married Individuals in New York who have obtained a degree higher than a Bachelor’s')
+# plt.ylabel('Number of people')
+# plt.xlabel('College Degree Field Code (based on Kaggle data)')
+# xlocs, xlabs = plt.xticks()
+# for i, v in enumerate(num_per_degree):
+#     plt.text(xlocs[i] - 0.5, v + 0.01, str(v))
+# plt.show()
+
+# MAKING GRAPHS FOR DISTRIBUTION OF OCCUPATIONS
+
+command1 = '''
+SELECT
+  OCC, COUNT(*)
+FROM
+  people
+GROUP BY
+    OCC
+;
+'''
+# c.execute(command1)
+# occupations = []
+# num_per_occ = []
+# for r in c:
+#     occupations.append(str(r[0]))
+#     num_per_occ.append(r[1])
+#
+# x_pos = np.arange(len(occupations))
+# plt.bar(occupations, num_per_occ, align='center', alpha=0.5)
+# plt.title('Distribution of Occupations for Married Individuals in New York who have obtained a degree higher than a Bachelor’s')
+# plt.ylabel('Number of people')
+# plt.xlabel('Occupation Code (based on ACS IPUMS data)')
+# xlocs, xlabs = plt.xticks(rotation=90)
+# for i, v in enumerate(num_per_occ):
+#     plt.text(xlocs[i] - 0.5, v + 0.01, str(v))
+# plt.show()
 
 
-con.commit()
+
+command1 = '''
+SELECT
+  kagOCC, COUNT(kagOCC)
+FROM
+  people
+GROUP BY
+    kagOCC
+;
+'''
+# c.execute(command1)
+# occupations = []
+# num_per_occ = []
+# for r in c:
+#     if r[0]!=None:
+#         occupations.append(str(r[0]))
+#         num_per_occ.append(r[1])
+#
+# x_pos = np.arange(len(occupations))
+# plt.bar(occupations, num_per_occ, align='center', alpha=0.5)
+# plt.title('Distribution of Occupations for Married Individuals in New York who have obtained a degree higher than a Bachelor’s')
+# plt.ylabel('Number of people')
+# plt.xlabel('Occupation Code (based on Kaggle data)')
+# xlocs, xlabs = plt.xticks()
+# for i, v in enumerate(num_per_occ):
+#     plt.text(xlocs[i] - 0.5, v + 0.01, str(v))
+# plt.show()
+
+
+
 con.close()
