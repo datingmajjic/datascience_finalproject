@@ -330,6 +330,7 @@ c.execute('PRAGMA foreign_keys = ON')
 # Delete tables if they exist
 c.execute('DROP TABLE IF EXISTS "field_of_study";')
 c.execute('DROP TABLE IF EXISTS "career";')
+c.execute('DROP TABLE IF EXISTS "demographics";')
 
 # Commands to create the 'field_of_study' and 'career' tables
 commands = ['decision', 'attractive', 'sincere', 'intelligent', 'fun', 'ambitious', 'share', 'like', 'probability', 'total']
@@ -346,11 +347,21 @@ for index in range(1, 18):
         create_career = create_career + ' "' + str(index) + '_' + entry + '" FLOAT,'
 create_career = create_career[:-1] + ');'
 
+create_demographics = '''CREATE TABLE demographics
+                         (iid INT PRIMARY KEY NOT NULL,
+                         field_cd INT,
+                         career_c INT,
+                         age INT,
+                         race INT);'''
+
 # Execute the create tables commands
 c.execute(create_field_of_study)
 conn.commit()
 
 c.execute(create_career)
+conn.commit()
+
+c.execute(create_demographics)
 conn.commit()
 
 # Insert values into tables
@@ -380,6 +391,20 @@ for entry in career_date_results[1:]:
 
     # Execute and commit the commands
     c.execute(insert_career)
+    conn.commit()
+
+for entry in participant_info[1:]:
+    insert_demographic = 'INSERT INTO demographics VALUES ('
+    for value in entry:
+        if value == None:
+            insert_demographic += 'NULL'
+        else:
+            insert_demographic += str(value)
+        insert_demographic += ', '
+    insert_demographic = insert_demographic[:-2] + ');'
+
+    # Execute and commit the commands
+    c.execute(insert_demographic)
     conn.commit()
 
 
