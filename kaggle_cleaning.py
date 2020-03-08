@@ -216,6 +216,84 @@ career_date_results[previous_iid] = new
 
 for entry in career_date_results:
     print(entry)
-# career_date_results is where data for results based on field of study is stored
+# career_date_results is where data for results based on intended career is stored
 ###############################################################################
 
+###############################################################################
+# Create a database for how each iid rated a certain race
+results = ['decision', 'attractive', 'sincere', 'intelligent', 'fun', 'ambitious', 'share', 'like', 'probability', 'total']
+race_date_results = []
+for index in range(1, 7):
+    for result in results:
+        new_column = str(index) + '_' + result
+        race_date_results.append(new_column)
+
+race_date_results = [['iid'] + race_date_results]
+for index in range(num_iids + 1):
+    new_iid = [index + 1]
+    scores = [0 for x in race_date_results[0][1:]]
+    new_entry = new_iid + scores
+    race_date_results.append(new_entry)
+
+previous_iid = 0
+total_tracker = [0 for x in range(len(race_date_results[0]))]
+
+for entry in kaggle_data[1:]:
+    # Column position of iid is: 0
+    current_iid = int(entry[0])
+
+    if current_iid != previous_iid and previous_iid != 0:
+        new = [previous_iid]
+        for (num, den) in zip(race_date_results[previous_iid][1:], total_tracker[1:]):
+            if den != 0:
+                new.append(num / den)
+            else:
+                new.append(0)
+        race_date_results[previous_iid] = new
+        total_tracker = [0 for x in range(len(race_date_results[0]))]
+
+    # Column position of pid is: 11
+    if entry[11] == '':
+        previous_iid = current_iid
+        continue
+    else:
+        partner_iid = int(entry[11])
+
+    partner_race = participant_info[partner_iid][4]
+    if partner_race == None:
+        previous_iid = current_iid
+        continue
+
+    # Indices for where to find findings in entry:
+    # Column position of dec/decision is: 97
+    # Column position of prob/probability is: 105
+    entry_indices = [97, 98, 99, 100, 101, 102, 103, 104, 105, 106]
+
+    # Index for where to start logging findings in race_date_results:
+    race_start_index = ((partner_race - 1) * 10) + 1
+
+    for index in entry_indices:
+        if index != 106:
+            if entry[index] != '':
+                race_date_results[current_iid][race_start_index] += float(entry[index])
+                total_tracker[race_start_index] += 1
+        else:
+            race_date_results[current_iid][race_start_index] += 1
+            total_tracker[race_start_index] = 1
+
+        race_start_index += 1
+
+    previous_iid = current_iid
+
+new = [previous_iid]
+for (num, den) in zip(race_date_results[previous_iid][1:], total_tracker[1:]):
+    if den != 0:
+        new.append(num / den)
+    else:
+        new.append(0)
+race_date_results[previous_iid] = new
+
+for entry in race_date_results:
+    print(entry)
+# race_date_results is where data for results based on race is stored
+###############################################################################
