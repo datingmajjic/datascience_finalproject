@@ -13,15 +13,16 @@ c = con.cursor()
 c.execute('DROP TABLE IF EXISTS "people";')
 c.execute('DROP TABLE IF EXISTS "matchKaggleEduc";')
 c.execute('DROP TABLE IF EXISTS "matchKaggleCareer";')
+c.execute('DROP TABLE IF EXISTS "original";')
 # drop data into database
-df.to_sql("people", con)
+df.to_sql("original", con)
 
 
 command1 = '''
 SELECT
   *
 FROM
-  people
+  original
 ;
 '''
 
@@ -57,7 +58,7 @@ FROM
 #delete rows where spouse is none
 command3_delete_spouse = '''
 DELETE
-FROM people
+FROM original
 WHERE (EDUC_SP IS NULL)
 OR (FAMUNIT_SP IS NULL)
 OR (SPLOC_SP IS NULL)
@@ -97,7 +98,7 @@ c.execute(command3_delete_spouse)
 
 command_onlyGrad = '''
 DELETE
-FROM people
+FROM original
 WHERE (EDUCD_SP <> 114 AND EDUCD_SP <> 115 AND EDUCD_SP <> 116)
 OR (EDUCD <> 114 AND EDUCD <> 115 AND EDUCD <> 116)
 '''
@@ -106,13 +107,38 @@ c.execute(command_onlyGrad)
 
 command_hasDeg = '''
 DELETE
-FROM people
+FROM original
 WHERE DEGFIELD = 0 OR DEGFIELD_SP = 0
 '''
 c.execute(command_hasDeg)
 
 
+command9 = '''
+CREATE TABLE people(
+    YEAR INT,
+    SAMPLE INT,
+    SERIAL INT,
+    PERNUM INT,
+    BIRTHYR INT,
+    EDUCD INT,
+    DEGFIELD INT,
+    OCC INT,
+    BIRTHYR_SP INT,
+    EDUCD_SP INT,
+    DEGFIELD_SP INT,
+    OCC_SP INT
+);
+'''
+command10 = '''
+INSERT INTO people (YEAR, SAMPLE, SERIAL, PERNUM, BIRTHYR, EDUCD, DEGFIELD, OCC, BIRTHYR_SP, EDUCD_SP, DEGFIELD_SP, OCC_SP)
+SELECT
+YEAR, SAMPLE, SERIAL, PERNUM, BIRTHYR, EDUCD, DEGFIELD, OCC, BIRTHYR_SP, EDUCD_SP, DEGFIELD_SP, OCC_SP
+FROM original
+;
+'''
 
+c.execute(command9)
+c.execute(command10)
 
 #start converting eduction to right values
 command_matchTable = '''
@@ -168,15 +194,6 @@ c.execute(command_matchTable);
 c.execute(command_insertVal);
 
 
-# command_joinTables = '''
-# SELECT *
-# FROM people as p
-# LEFT JOIN matchKaggleEduc as m
-# ON p.DEGFIELD = m.censusID
-# '''
-# c.execute(command_joinTables)
-
-
 
 command5 = '''
 ALTER TABLE people
@@ -212,6 +229,7 @@ c.execute(command7)
 c.execute(command8)
 
 
+
 #########
 #now do careers
 #########
@@ -225,6 +243,10 @@ CREATE TABLE matchKaggleCareer(
     maxVAL INT
 );
 '''
+
+
+
+#kaggleID 0 is unemployed, I added this bc interesting
 command_insertValC = '''
 INSERT INTO matchKaggleCareer
     (censusID, kaggleID, minVAL, maxVAL)
@@ -338,6 +360,9 @@ c.execute(command7C1)
 c.execute(command7C2)
 c.execute(command8C1)
 c.execute(command8C2)
+con.commit()
+
+
 
 
 con.commit()
