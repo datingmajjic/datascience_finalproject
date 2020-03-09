@@ -232,9 +232,6 @@ for (num, den) in zip(career_date_results[previous_iid][1:], total_tracker[1:]):
     else:
         new.append(None)
 career_date_results[previous_iid] = new
-
-# for entry in career_date_results:
-#     print(entry)
 # career_date_results is where data for results based on intended career is stored
 ###############################################################################
 
