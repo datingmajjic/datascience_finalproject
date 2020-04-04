@@ -114,13 +114,18 @@ c.execute(command_updateSexSpouse)
 
 command_updateRace1 = '''
 UPDATE original
-SET RACE = 1
+SET RACE = 100
 WHERE RACE = 2
 '''
 command_updateRace2 = '''
 UPDATE original
 SET RACE = 2
 WHERE RACE = 1
+'''
+command_updateRace11 = '''
+UPDATE original
+SET RACE = 1
+WHERE RACE = 100
 '''
 command_updateRace3 = '''
 UPDATE original
@@ -139,6 +144,7 @@ WHERE RACE = 7 OR RACE = 8 OR RACE = 9
 '''
 c.execute(command_updateRace1)
 c.execute(command_updateRace2)
+c.execute(command_updateRace11)
 c.execute(command_updateRace3)
 c.execute(command_updateRace4)
 c.execute(command_updateRace5)
@@ -146,13 +152,18 @@ c.execute(command_updateRace5)
 
 command_updateRaceSpouse1 = '''
 UPDATE original
-SET RACE_SP = 1
+SET RACE_SP = 100
 WHERE RACE_SP = 2
 '''
 command_updateRaceSpouse2 = '''
 UPDATE original
 SET RACE_SP = 2
 WHERE RACE_SP = 1
+'''
+command_updateRaceSpouse11 = '''
+UPDATE original
+SET RACE_SP = 1
+WHERE RACE_SP = 100
 '''
 command_updateRaceSpouse3 = '''
 UPDATE original
@@ -171,6 +182,7 @@ WHERE RACE_SP = 7 OR RACE_SP = 8 OR RACE_SP = 9
 '''
 c.execute(command_updateRaceSpouse1)
 c.execute(command_updateRaceSpouse2)
+c.execute(command_updateRaceSpouse11)
 c.execute(command_updateRaceSpouse3)
 c.execute(command_updateRaceSpouse4)
 c.execute(command_updateRaceSpouse5)
