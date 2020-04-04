@@ -99,6 +99,85 @@ WHERE DEGFIELD = 0 OR DEGFIELD_SP = 0
 '''
 c.execute(command_hasDeg)
 
+command_updateSex = '''
+UPDATE original
+SET SEX = 0
+WHERE SEX = 2
+'''
+command_updateSexSpouse = '''
+UPDATE original
+SET SEX_SP = 0
+WHERE SEX_SP = 2
+'''
+c.execute(command_updateSexSpouse)
+
+
+command_updateRace1 = '''
+UPDATE original
+SET RACE = 1
+WHERE RACE = 2
+'''
+command_updateRace2 = '''
+UPDATE original
+SET RACE = 2
+WHERE RACE = 1
+'''
+command_updateRace3 = '''
+UPDATE original
+SET RACE = 4
+WHERE RACE = 5 OR RACE = 6
+'''
+command_updateRace4 = '''
+UPDATE original
+SET RACE = 5
+WHERE RACE = 3
+'''
+command_updateRace5 = '''
+UPDATE original
+SET RACE = 6
+WHERE RACE = 7 OR RACE = 8 OR RACE = 9
+'''
+c.execute(command_updateRace1)
+c.execute(command_updateRace2)
+c.execute(command_updateRace3)
+c.execute(command_updateRace4)
+c.execute(command_updateRace5)
+
+
+command_updateRaceSpouse1 = '''
+UPDATE original
+SET RACE_SP = 1
+WHERE RACE_SP = 2
+'''
+command_updateRaceSpouse2 = '''
+UPDATE original
+SET RACE_SP = 2
+WHERE RACE_SP = 1
+'''
+command_updateRaceSpouse3 = '''
+UPDATE original
+SET RACE_SP = 4
+WHERE RACE_SP = 5 OR RACE_SP = 6
+'''
+command_updateRaceSpouse4 = '''
+UPDATE original
+SET RACE_SP = 5
+WHERE RACE_SP = 3
+'''
+command_updateRaceSpouse5 = '''
+UPDATE original
+SET RACE_SP = 6
+WHERE RACE_SP = 7 OR RACE_SP = 8 OR RACE_SP = 9
+'''
+c.execute(command_updateRaceSpouse1)
+c.execute(command_updateRaceSpouse2)
+c.execute(command_updateRaceSpouse3)
+c.execute(command_updateRaceSpouse4)
+c.execute(command_updateRaceSpouse5)
+
+
+
+
 
 command9 = '''
 CREATE TABLE people(
@@ -115,13 +194,16 @@ CREATE TABLE people(
     DEGFIELD_SP INT,
     OCC_SP INT,
     SEX INT,
-    SEX_SP INT
+    SEX_SP INT,
+    RACE INT,
+    RACE_SP INT
 );
 '''
 command10 = '''
-INSERT INTO people (YEAR, SAMPLE, SERIAL, PERNUM, BIRTHYR, EDUCD, DEGFIELD, OCC, BIRTHYR_SP, EDUCD_SP, DEGFIELD_SP, OCC_SP, SEX, SEX_SP)
+INSERT INTO people (YEAR, SAMPLE, SERIAL, PERNUM, BIRTHYR, EDUCD, DEGFIELD, OCC, BIRTHYR_SP, EDUCD_SP, DEGFIELD_SP, OCC_SP, SEX, SEX_SP,
+RACE, RACE_SP)
 SELECT
-YEAR, SAMPLE, SERIAL, PERNUM, BIRTHYR, EDUCD, DEGFIELD, OCC, BIRTHYR_SP, EDUCD_SP, DEGFIELD_SP, OCC_SP, SEX, SEX_SP
+YEAR, SAMPLE, SERIAL, PERNUM, BIRTHYR, EDUCD, DEGFIELD, OCC, BIRTHYR_SP, EDUCD_SP, DEGFIELD_SP, OCC_SP, SEX, SEX_SP, RACE, RACE_SP
 FROM original
 ;
 '''
