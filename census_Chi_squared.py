@@ -35,11 +35,16 @@ def countOCC(dfC, dfK, career):
             countKaggle += 1
 
     return (countCensus, countKaggle)
+'''
+counts the number of people in the Kaggle dataset who would go on another date
+ with someone of the same occupation
 
-#counts the number of people in the Kaggle dataset who would go on another date
-# with someone of the same occupation
+    returns array where each column is an occupation and row 0 represents the
+    number of people who would go on another date with the same occupation and
+    row 1 represents the number of  people who would not go on another date with
+    the same occupation
+'''
 def sameOCCKaggle(demo, career):
-
     #first row is date
     #second row is not date
     #columns are the occupations
@@ -61,6 +66,14 @@ def sameOCCKaggle(demo, career):
                         # notDate += 1
                         occupations[1][int(occ-1)]+= 1
     return occupations
+'''
+counts the number of people in the Census dataset who married someone of the same occupation
+
+    returns array where each column is an occupation and row 0 represents the
+    number of people who married the same occupation and
+    row 1 represents the number of  people who did not marry someone with the
+    same occupation
+'''
 def sameOCCCensus(dfC):
     occupations = np.zeros((2,17))
 
@@ -74,6 +87,15 @@ def sameOCCCensus(dfC):
                 occupations[1][int(yourOCC-1)]+= 1
 
     return occupations
+
+'''
+counts the number of people in the Census dataset who married someone of the same field
+
+    returns array where each column is a field and row 0 represents the
+    number of people who married the same field and
+    row 1 represents the number of  people who did not marry someone with the
+    same field
+'''
 def sameFieldCensus(dfC):
     fields = np.zeros((2,18))
 
@@ -87,7 +109,15 @@ def sameFieldCensus(dfC):
                 fields[1][int(yourF-1)]+= 1
 
     return np.asarray(fields)
+'''
+counts the number of people in the Kaggle dataset who would go on another date
+ with someone of the same field
 
+    returns array where each column is an field and row 0 represents the
+    number of people who would go on another date with the same field and
+    row 1 represents the number of people who would not go on another date with
+    the same field
+'''
 def sameFieldKaggle(demo, field):
     #first row is date
     #second row is not date
@@ -111,13 +141,11 @@ def sameFieldKaggle(demo, field):
                         fields[1][int(f-1)]+= 1
     return np.asarray(fields)
 
-###############################################################################
-
 '''
 counts the number of people in the Kaggle dataset who would go on another date
  with someone of the same occupation
 
-returns information as tuple containing number of people who would go on another
+returns information as list containing number of people who would go on another
  date with someone of the same occupation and the number of people who would not go on another
 date with someone of the same occupation
 '''
@@ -149,7 +177,7 @@ def sameOCCKaggleAll(demo, career):
 counts the number of people in the Census dataset who married someone
  with the same occupation
 
-returns information as tuple containing number of people who married someone of
+returns information as list containing number of people who married someone of
 the same occupation and the number of people who dod not marry someone with the
 same occupation
 '''
@@ -167,7 +195,14 @@ def sameOCCCensusAll(dfC):
 
     return [Married, notMarried]
 
+'''
+counts the number of people in the Census dataset who married someone
+ with the same field
 
+returns information as list containing number of people who married someone of
+the same field and the number of people who dod not marry someone with the
+same field
+'''
 def sameFieldCensusAll(dfC):
     married = 0
     notMarried = 0
@@ -182,6 +217,14 @@ def sameFieldCensusAll(dfC):
 
     return [married, notMarried]
 
+'''
+counts the number of people in the Kaggle dataset who would go on another date
+ with someone of the same field
+
+returns information as list containing number of people who would go on another
+ date with someone of the same field and the number of people who would not go on another
+date with someone of the same field
+'''
 def sameFieldKaggleAll(demo, field):
     dateAgain = 0
     notDate = 0
@@ -247,18 +290,22 @@ if __name__=='__main__':
 #chi-squared test comparing the proportion of people who are a specific occuption and marry
 #the same occupation to the total number of people who marry the same occupation in each dataset
 ##############################################################################################
+
+    print("Chi squared tests comparing proportion of each occupation with the proportion from the Kaggle dataset")
     for occ in range(17):
         obs = np.array(sameOccupationKaggle[0][occ], sameOccupationKaggle[1][occ])
         stat, p = chisquare(obs, f_exp = obsKO)
-        print("chi squared test comparing proportion of occupation " + str(occ+1) + " with the Kaggle dataset")
-        print("p-value = " + str(p))
+        print("occupation = " + str(occ +1) + " p-value = " + str(p))
 
+    print()
+
+    print("Chi squared tests comparing proportion of each occupation with the proportion from the Census dataset")
     for occ in range(17):
         obs = np.array(sameOccupationCensus[0][occ], sameOccupationCensus[1][occ])
         stat, p = chisquare(obs, f_exp = obsCO)
-        print("chi squared test comparing proportion of occupation " + str(occ+1) + " with the Census dataset")
-        print("p-value = " + str(p))
+        print("occupation = " + str(occ +1) + " p-value = " + str(p))
 
+    print()
 ##############################################################################################
 #chi-squared test comparing the proportion of people who are a specific field and marry
 #the same field to the total number of people who marry the same field in each dataset
@@ -271,21 +318,23 @@ if __name__=='__main__':
     sameFKaggle = sameFieldKaggle(dfK, dfKField)
     sameFCensus = sameFieldCensus(dfC)
 
+    print("Chi squared tests comparing proportion of each field with the proportion from the Kaggle dataset")
     for field in range(18):
         obs = np.array(sameFKaggle[0][field], sameFKaggle[1][field])
         stat, p = chisquare(obs, f_exp = obsKF)
-        print("chi squared test comparing proportion of field " + str(field+1) + " with the Kaggle dataset")
-        print("p-value = " + str(p))
+        print("field = " + str(field+1) + " p-value = " + str(p))
 
+    print()
+
+    print("Chi squared tests comparing proportion of each field with the proportion from the Census dataset")
     for field in range(18):
         obs = np.array(sameFCensus[0][field], sameFCensus[1][field])
         stat, p = chisquare(obs, f_exp = obsCF)
-        print("chi squared test comparing proportion of field " + str(field+1) + " with the Census dataset")
-        print("p-value = " + str(p))
+        print("field = " + str(field+1) + " p-value = " + str(p))
 
-
-    #####
-    #ADD MEANS AND Confidence intervals
+##############################################################################################
+    #graphs
+##############################################################################################
 
     fig = plt.figure()
     ax = fig.add_subplot(121)
