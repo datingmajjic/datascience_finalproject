@@ -244,6 +244,8 @@ def sameFieldKaggleAll(demo, field):
                         notDate += 1
     return [dateAgain, notDate]
 
+##############################################################################################
+##############################################################################################
 
 if __name__=='__main__':
     def load_file(file_path, command):
@@ -332,22 +334,144 @@ if __name__=='__main__':
         stat, p = chisquare(obs, f_exp = obsCF)
         print("field = " + str(field+1) + " p-value = " + str(p))
 
+
+
 ##############################################################################################
     #graphs
 ##############################################################################################
+#graphs for fields
+
+    sameFKaggle = sameFieldKaggle(dfK, dfKField)
+    sameFCensus = sameFieldCensus(dfC)
+    #field
+    labels = [x for x in range(1,19)]
+    same = sameFKaggle[0,:]
+    diff = sameFKaggle[1,:]
+
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35  # the width of the bars
 
     fig = plt.figure()
-    ax = fig.add_subplot(121)
-    axis = [x for x in range(1,18)]
-    tmp = ax.hist([sameFKaggle[0,:], sameFKaggle[1,:]], bins = axis)
-    ax.set_ylabel('Number of people')
+    ax = fig.add_subplot(211)
+    # fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width/2, same, width, label='Same Field')
+    rects2 = ax.bar(x + width/2, diff, width, label='Different Field')
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Number of People')
     ax.set_xlabel('Fields')
     ax.set_title('Compare interest Kaggle Dataset from same Field')
-    print(sameFCensus)
-    ax = fig.add_subplot(122)
-    axisC = [x for x in range(1,17)]
-    tmp = ax.hist([sameFCensus[0,:], sameFCensus[1,:]], bins = axisC)
-    ax.set_ylabel('Number of people')
-    ax.set_xlabel('Fields')
-    ax.set_title('Compare interest Census Dataset from same Field')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+
+    def autolabel(ax, rects):
+        """Attach a text label above each bar in *rects*, displaying its height."""
+        for rect in rects:
+            height = rect.get_height()
+            ax.annotate('{}'.format(height),
+                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xytext=(0, 3),  # 3 points vertical offset
+                        textcoords="offset points",
+                        ha='center', va='bottom')
+
+
+    autolabel(ax, rects1)
+    autolabel(ax, rects2)
+
+    fig.tight_layout()
+
+#######################################################################################
+
+    labels = [x for x in range(1,19)]
+    sameC = sameFCensus[0,:]
+    diffC = sameFCensus[1,:]
+
+    ax2 = fig.add_subplot(212)
+    rects1_2 = ax2.bar(x - width/2, sameC, width, label='Same Field')
+    rects2_2 = ax2.bar(x + width/2, diffC, width, label='Different Field')
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax2.set_ylabel('Number of People')
+    ax2.set_xlabel('Fields')
+    ax2.set_title('Compare interest Census Dataset from same Field')
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(labels)
+    ax2.legend()
+
+
+    autolabel(ax2, rects1_2)
+    autolabel(ax2, rects2_2)
+
+    fig.tight_layout()
+    plt.show()
+
+#######################################################################################
+#occupation
+#######################################################################################
+
+    sameOccKaggle = sameOCCKaggle(dfK, dfKCareer)
+    sameOccCensus = sameOCCCensus(dfC)
+
+
+    labels = [x for x in range(1,18)]
+    same = sameOccKaggle[0,:]
+    diff = sameOccKaggle[1,:]
+
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35  # the width of the bars
+
+    fig = plt.figure()
+    ax = fig.add_subplot(211)
+    # fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width/2, same, width, label='Same OCC')
+    rects2 = ax.bar(x + width/2, diff, width, label='Different OCC')
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Number of People')
+    ax.set_xlabel('Occupations')
+    ax.set_title('Compare interest Kaggle Dataset from same occupation')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+
+    def autolabel(ax, rects):
+        """Attach a text label above each bar in *rects*, displaying its height."""
+        for rect in rects:
+            height = rect.get_height()
+            ax.annotate('{}'.format(height),
+                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xytext=(0, 3),  # 3 points vertical offset
+                        textcoords="offset points",
+                        ha='center', va='bottom')
+
+
+    autolabel(ax, rects1)
+    autolabel(ax, rects2)
+
+    fig.tight_layout()
+
+#######################################################################################
+
+    labels = [x for x in range(1,18)]
+    sameC = sameOccCensus[0,:]
+    diffC = sameOccCensus[1,:]
+
+    ax2 = fig.add_subplot(212)
+    rects1_2 = ax2.bar(x - width/2, sameC, width, label='Same OCC')
+    rects2_2 = ax2.bar(x + width/2, diffC, width, label='Different OCC')
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax2.set_ylabel('Number of People')
+    ax2.set_xlabel('Occupations')
+    ax2.set_title('Compare interest Census Dataset from same occupation')
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(labels)
+    ax2.legend()
+
+
+    autolabel(ax2, rects1_2)
+    autolabel(ax2, rects2_2)
+
+    fig.tight_layout()
     plt.show()
