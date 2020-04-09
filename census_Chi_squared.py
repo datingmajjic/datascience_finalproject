@@ -51,10 +51,12 @@ def sameOCCKaggle(demo, career):
                 #finding the person by their id in the career table
                 if career.loc[j,"iid"] == id:
                     #finding if they would date the person with the same career
-                    if career.loc[j,colname] > 0.5 and not math.isnan(career.loc[j,colname]):
+                    if career.loc[j,colname] > 0.5:
+                    # if career.loc[j,colname] > 0.5 and not math.isnan(career.loc[j,colname]):
                         # dateAgain += 1
                         occupations[0][int(occ-1)]+= 1
-                    else:
+                    # else:
+                    elif not math.isnan(career.loc[j,colname]):
                         # notDate += 1
                         occupations[1][int(occ-1)]+= 1
     return occupations
@@ -102,10 +104,10 @@ def sameFieldKaggle(demo, field):
                 #finding the person by their id in the career table
                 if field.loc[j,"iid"] == id:
                     #finding if they would date the person with the same career
-                    if field.loc[j,colname] > 0.5 and not math.isnan(field.loc[j,colname]):
+                    if field.loc[j,colname] > 0.5:
                         # dateAgain += 1
                         fields[0][int(f-1)]+= 1
-                    else:
+                    elif not math.isnan(field.loc[j,colname]):
                         # notDate += 1
                         fields[1][int(f-1)]+= 1
     return fields
