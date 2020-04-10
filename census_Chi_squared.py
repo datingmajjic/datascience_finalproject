@@ -244,8 +244,10 @@ def sameFieldKaggleAll(demo, field):
                         notDate += 1
     return [dateAgain, notDate]
 
-##############################################################################################
-##############################################################################################
+#####################################################################################################################################
+#####################################################################################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
 if __name__=='__main__':
     def load_file(file_path, command):
@@ -304,7 +306,9 @@ if __name__=='__main__':
     print("Chi squared tests comparing proportion of each occupation with the proportion from the Census dataset")
     for occ in range(17):
         obs = np.array(sameOccupationCensus[0][occ], sameOccupationCensus[1][occ])
-        stat, p = chisquare(obs, f_exp = obsCO)
+        proportion = obsCO[0]/(sum(obsCO))
+        exp = [obs[0]*sum(obs), obs[1]*sum(obs)]
+        stat, p = chisquare(obs, f_exp = exp)
         print("occupation = " + str(occ +1) + " p-value = " + str(p))
 
     print()
@@ -375,7 +379,6 @@ if __name__=='__main__':
                         textcoords="offset points",
                         ha='center', va='bottom')
 
-
     autolabel(ax, rects1)
     autolabel(ax, rects2)
 
@@ -399,7 +402,6 @@ if __name__=='__main__':
     ax2.set_xticklabels(labels)
     ax2.legend()
 
-
     autolabel(ax2, rects1_2)
     autolabel(ax2, rects2_2)
 
@@ -412,7 +414,6 @@ if __name__=='__main__':
 
     sameOccKaggle = sameOCCKaggle(dfK, dfKCareer)
     sameOccCensus = sameOCCCensus(dfC)
-
 
     labels = [x for x in range(1,18)]
     same = sameOccKaggle[0,:]
@@ -434,17 +435,6 @@ if __name__=='__main__':
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.legend()
-
-    def autolabel(ax, rects):
-        """Attach a text label above each bar in *rects*, displaying its height."""
-        for rect in rects:
-            height = rect.get_height()
-            ax.annotate('{}'.format(height),
-                        xy=(rect.get_x() + rect.get_width() / 2, height),
-                        xytext=(0, 3),  # 3 points vertical offset
-                        textcoords="offset points",
-                        ha='center', va='bottom')
-
 
     autolabel(ax, rects1)
     autolabel(ax, rects2)
@@ -468,7 +458,6 @@ if __name__=='__main__':
     ax2.set_xticks(x)
     ax2.set_xticklabels(labels)
     ax2.legend()
-
 
     autolabel(ax2, rects1_2)
     autolabel(ax2, rects2_2)
