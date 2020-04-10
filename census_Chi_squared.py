@@ -6,35 +6,6 @@ import numpy as np
 from scipy.stats import chisquare
 from scipy import stats
 
-#counts the number of ppl with this field in both datasets
-def countField(dfC, dfK, field):
-    #census
-    # print(dfC["kagEDUC"])
-    countCensus = 0
-    for i in range(len(dfC)):
-        if dfC.loc[i, "kagEDUC"] == field:
-            countCensus += 1
-    countKaggle = 0
-    for i in range(len(dfK)):
-        if dfK.loc[i, "field_cd"] == field:
-            countKaggle += 1
-
-    return (countCensus, countKaggle)
-
-#counts the number of ppl with this occupation in both datasets
-def countOCC(dfC, dfK, career):
-    #census
-    # print(dfC["kagEDUC"])
-    countCensus = 0
-    for i in range(len(dfC)):
-        if dfC.loc[i, "kagOCC"] == career:
-            countCensus += 1
-    countKaggle = 0
-    for i in range(len(dfK)):
-        if dfK.loc[i, "career_c"] == career:
-            countKaggle += 1
-
-    return (countCensus, countKaggle)
 '''
 counts the number of people in the Kaggle dataset who would go on another date
  with someone of the same occupation
@@ -170,9 +141,9 @@ def sameOCCKaggleAll(demo, career):
                 #finding the person by their id in the career table
                 if career.loc[j,"iid"] == id:
                     #finding if they would date the person with the same career
-                    if career.loc[j,colname] > 0.5 and not math.isnan(career.loc[j,colname]):
+                    if career.loc[j,colname] > 0.5 :
                         dateAgain += 1
-                    else:
+                    elif not math.isnan(career.loc[j,colname]):
                         notDate += 1
     return [dateAgain, notDate]
 '''
@@ -240,9 +211,9 @@ def sameFieldKaggleAll(demo, field):
                 #finding the person by their id in the career table
                 if field.loc[j,"iid"] == id:
                     #finding if they would date the person with the same career
-                    if field.loc[j,colname] > 0.5 and not math.isnan(field.loc[j,colname]):
+                    if field.loc[j,colname] > 0.5:
                         dateAgain += 1
-                    else:
+                    elif not math.isnan(field.loc[j,colname]):
                         notDate += 1
     return [dateAgain, notDate]
 
@@ -282,6 +253,7 @@ if __name__=='__main__':
     chi2, p, dof, expected = stats.chi2_contingency(obsF)
     print("chi squared test comparing same fields on both datasets")
     print("p-value = " + str(p))
+    print()
 
     '''
     listL columns each represent one occupation and row 0 stores the number of
@@ -299,19 +271,23 @@ if __name__=='__main__':
 
     print("Chi squared tests comparing proportion of each occupation with the proportion from the Kaggle dataset")
     for occ in range(17):
-        obs = np.array(sameOccupationKaggle[0][occ], sameOccupationKaggle[1][occ])
-        stat, p = chisquare(obs, f_exp = obsKO)
-        print("occupation = " + str(occ +1) + " p-value = " + str(p))
+        obs = np.array((sameOccupationKaggle[0][occ], sameOccupationKaggle[1][occ]))
+        proportion = obsKO[0]/(sum(obsKO))
+        total = sum(obs)
+        EXP = np.array([total*proportion, total - (total*proportion)])
+        stat, p = chisquare(obs, f_exp = EXP)
+        print("occupation = " + str(occ+1) + " p-value = " + str(p))
 
     print()
 
     print("Chi squared tests comparing proportion of each occupation with the proportion from the Census dataset")
     for occ in range(17):
-        obs = np.array(sameOccupationCensus[0][occ], sameOccupationCensus[1][occ])
+        obs = np.array((sameOccupationCensus[0][occ], sameOccupationCensus[1][occ]))
         proportion = obsCO[0]/(sum(obsCO))
-        exp = [obs[0]*sum(obs), obs[1]*sum(obs)]
-        stat, p = chisquare(obs, f_exp = exp)
-        print("occupation = " + str(occ +1) + " p-value = " + str(p))
+        total = sum(obs)
+        EXP = np.array([total*proportion, total - (total*proportion)])
+        stat, p = chisquare(obs, f_exp = EXP)
+        print("occupation = " + str(occ+1) + " p-value = " + str(p))
 
     print()
 ##############################################################################################
@@ -328,17 +304,34 @@ if __name__=='__main__':
 
     print("Chi squared tests comparing proportion of each field with the proportion from the Kaggle dataset")
     for field in range(18):
-        obs = np.array(sameFKaggle[0][field], sameFKaggle[1][field])
-        stat, p = chisquare(obs, f_exp = obsKF)
+        obs = np.array((sameFKaggle[0][field], sameFKaggle[1][field]))
+        proportion = obsKF[0]/(sum(obsKF))
+        total = sum(obs)
+        EXP = np.array([total*proportion, total - (total*proportion)])
+        stat, p = chisquare(obs, f_exp = EXP)
         print("field = " + str(field+1) + " p-value = " + str(p))
 
     print()
 
     print("Chi squared tests comparing proportion of each field with the proportion from the Census dataset")
+    sameFCensus = sameFieldCensus(dfC)
+    obsCF = sameFieldCensusAll(dfC)
     for field in range(18):
-        obs = np.array(sameFCensus[0][field], sameFCensus[1][field])
-        stat, p = chisquare(obs, f_exp = obsCF)
+        obs = np.array((sameFCensus[0][field], sameFCensus[1][field]))
+        proportion = obsCF[0]/(sum(obsCF))
+        total = sum(obs)
+        EXP = np.array([total*proportion, total - (total*proportion)])
+        stat, p = chisquare(obs, f_exp = EXP)
         print("field = " + str(field+1) + " p-value = " + str(p))
+
+        # #chi2
+        # obsF = np.array((obs,obsCF))
+        # # print(obsF)
+        # if np.array_equal(obs, [0,0]):
+        #     print("field = " + str(field+1) + " no data")
+        # else:
+        #     chi2, p, dof, expected = stats.chi2_contingency(obsF)
+        #     print("field = " + str(field+1) + " p-value = " + str(p))
 
 
 
@@ -349,10 +342,16 @@ if __name__=='__main__':
 
     sameFKaggle = sameFieldKaggle(dfK, dfKField)
     sameFCensus = sameFieldCensus(dfC)
+
+    obsKF = sameFieldKaggleAll(dfK, dfKField)
+    obsCF = sameFieldCensusAll(dfC)
     #field
     labels = [x for x in range(1,19)]
     same = sameFKaggle[0,:]
     diff = sameFKaggle[1,:]
+    # labels.append("Total")
+    # same = np.append(sameFKaggle[0,:],obsKF[0])
+    # diff = np.append(sameFKaggle[1,:],obsKF[1])
 
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
@@ -391,6 +390,9 @@ if __name__=='__main__':
     labels = [x for x in range(1,19)]
     sameC = sameFCensus[0,:]
     diffC = sameFCensus[1,:]
+    # labels.append("Total")
+    # sameC = np.append(sameFCensus[0,:], obsCF[0])
+    # diffC = np.append(sameFCensus[1,:], obsCF[1])
 
     ax2 = fig.add_subplot(212)
     rects1_2 = ax2.bar(x - width/2, sameC, width, label='Same Field')
@@ -416,10 +418,15 @@ if __name__=='__main__':
 
     sameOccKaggle = sameOCCKaggle(dfK, dfKCareer)
     sameOccCensus = sameOCCCensus(dfC)
+    obsCO = sameOCCCensusAll(dfC)
+    obsKO = sameOCCKaggleAll(dfK, dfKCareer)
 
     labels = [x for x in range(1,18)]
     same = sameOccKaggle[0,:]
     diff = sameOccKaggle[1,:]
+    # labels.append("Total")
+    # same = np.append(sameOccKaggle[0,:],obsKO[0])
+    # diff = np.append(sameOccKaggle[1,:], obsKO[1])
 
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
@@ -448,6 +455,9 @@ if __name__=='__main__':
     labels = [x for x in range(1,18)]
     sameC = sameOccCensus[0,:]
     diffC = sameOccCensus[1,:]
+    # labels.append("Total")
+    # sameC = np.append(sameOccCensus[0,:],obsCO[0])
+    # diffC = np.append(sameOccCensus[1,:], obsCO[1])
 
     ax2 = fig.add_subplot(212)
     rects1_2 = ax2.bar(x - width/2, sameC, width, label='Same OCC')
@@ -465,4 +475,68 @@ if __name__=='__main__':
     autolabel(ax2, rects2_2)
 
     fig.tight_layout()
+
+    plt.show()
+#######################################################################################
+#compare census to kaggle
+#######################################################################################
+    fig = plt.figure()
+
+    #occupation
+    labels = ["Kaggle", "Census"]
+    same = np.array((obsKO[0], obsCO[0]))
+    diff = np.array((obsKO[1], obsCO[1]))
+
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35
+
+    ax3 = fig.add_subplot(211)
+    rects1 = ax3.bar(x - width/2, same, width, label='Same OCC')
+    rects2 = ax3.bar(x + width/2, diff, width, label='Different OCC')
+
+    ax3.set_ylabel('Number of People')
+    ax3.set_xlabel('Dataset')
+    ax3.set_title('Compare Census to Kaggle from same occupation')
+    ax3.set_xticks(x)
+    ax3.set_xticklabels(labels)
+    ax3.legend()
+
+    autolabel(ax3, rects1)
+    autolabel(ax3, rects2)
+
+    fig.tight_layout()
+
+#######################################################################################
+
+
+    #occupation
+    labels = ["Kaggle", "Census"]
+    # maxVal = max(obsKF[0], obsCF[0], obsKF[1], obsCF[1])
+    sameF = np.array((obsKF[0], obsCF[0]))
+    # sameF = np.true_divide(sameF, maxVal)
+    diffF = np.array((obsKF[1], obsCF[1]))
+    # diffF = np.true_divide(diffF, maxVal)
+
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35
+
+    ax4 = fig.add_subplot(212)
+    rects1_1 = ax4.bar(x - width/2, sameF, width, label='Same field')
+    rects2_1 = ax4.bar(x + width/2, diffF, width, label='Different field')
+
+    ax4.set_ylabel('Number of People')
+    ax4.set_xlabel('Dataset')
+    ax4.set_title('Compare Census to Kaggle from same field')
+    ax4.set_xticks(x)
+    ax4.set_xticklabels(labels)
+    ax4.legend()
+
+    autolabel(ax4, rects1_1)
+    autolabel(ax4, rects2_1)
+
+    fig.tight_layout()
+
+
+
+
     plt.show()
