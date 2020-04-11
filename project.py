@@ -371,7 +371,7 @@ VALUES
     (2810, 16, NULL, NULL),
     (2840, 16, NULL, NULL),
     (2850, 16, NULL, NULL),
-    (1300, 16, NULL, NULL);
+    (1300, 17, NULL, NULL);
 '''
 
 c.execute(command_matchTableC);
