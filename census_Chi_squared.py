@@ -15,29 +15,36 @@ counts the number of people in the Kaggle dataset who would go on another date
     row 1 represents the number of  people who would not go on another date with
     the same occupation
 '''
-def sameOCCKaggle(demo, career):
+def sameOCCKaggle(demo):
     #first row is date
     #second row is not date
     #columns are the occupations
     occupations = np.zeros((2,17))
-    for i in range(len(demo)):
-        id = demo.loc[i, "iid"]
-        occ =  demo.loc[i, "career_c"]
-        if not math.isnan(id) and  not math.isnan(occ):
-
-            colname = str(int(occ))+"_decision"
-            for j in range(len(career)):
-                #finding the person by their id in the career table
-                if career.loc[j,"iid"] == id:
-                    #finding if they would date the person with the same career
-                    if career.loc[j,colname] > 0.5:
-                    # if career.loc[j,colname] > 0.5 and not math.isnan(career.loc[j,colname]):
-                        # dateAgain += 1
-                        occupations[0][int(occ-1)]+= 1
-                    # else:
-                    elif not math.isnan(career.loc[j,colname]):
-                        # notDate += 1
-                        occupations[1][int(occ-1)]+= 1
+    # for i in range(len(demo)):
+    #     id = demo.loc[i, "iid"]
+    #     occ =  demo.loc[i, "career_c"]
+    #     if not math.isnan(id) and  not math.isnan(occ):
+    #
+    #         colname = str(int(occ))+"_decision"
+    #         for j in range(len(career)):
+    #             #finding the person by their id in the career table
+    #             if career.loc[j,"iid"] == id:
+    #                 #finding if they would date the person with the same career
+    #                 if career.loc[j,colname] > 0.5:
+    #                 # if career.loc[j,colname] > 0.5 and not math.isnan(career.loc[j,colname]):
+    #                     # dateAgain += 1
+    #                     occupations[0][int(occ-1)]+= 1
+    #                 # else:
+    #                 elif not math.isnan(career.loc[j,colname]):
+    #                     # notDate += 1
+    #                     occupations[1][int(occ-1)]+= 1
+    for i in range(len(demo.index)):
+        if demo.loc[i, "dec"] == 1:
+            occ = demo.loc[i, "career_c"]
+            if demo.loc[i, "same_career"] == 1 and not math.isnan(occ):
+                occupations[0][int(occ-1)]+= 1
+            elif not math.isnan(occ):
+                occupations[1][int(occ-1)]+= 1
     return occupations
 '''
 counts the number of people in the Census dataset who married someone of the same occupation
@@ -91,27 +98,36 @@ counts the number of people in the Kaggle dataset who would go on another date
     row 1 represents the number of people who would not go on another date with
     the same field
 '''
-def sameFieldKaggle(demo, field):
+def sameFieldKaggle(demo):
     #first row is date
     #second row is not date
     #columns are the occupations
     fields = np.zeros((2,18))
-    for i in range(len(demo)):
-        id = demo.loc[i, "iid"]
-        f =  demo.loc[i, "field_cd"]
-        if not math.isnan(id) and  not math.isnan(f):
+    # for i in range(len(demo)):
+    #     id = demo.loc[i, "iid"]
+    #     f =  demo.loc[i, "field_cd"]
+    #     if not math.isnan(id) and  not math.isnan(f):
+    #
+    #         colname = str(int(f))+"_decision"
+    #         for j in range(len(field)):
+    #             #finding the person by their id in the career table
+    #             if field.loc[j,"iid"] == id:
+    #                 #finding if they would date the person with the same career
+    #                 if field.loc[j,colname] > 0.5:
+    #                     # dateAgain += 1
+    #                     fields[0][int(f-1)]+= 1
+    #                 elif not math.isnan(field.loc[j,colname]):
+    #                     # notDate += 1
+    #                     fields[1][int(f-1)]+= 1
 
-            colname = str(int(f))+"_decision"
-            for j in range(len(field)):
-                #finding the person by their id in the career table
-                if field.loc[j,"iid"] == id:
-                    #finding if they would date the person with the same career
-                    if field.loc[j,colname] > 0.5:
-                        # dateAgain += 1
-                        fields[0][int(f-1)]+= 1
-                    elif not math.isnan(field.loc[j,colname]):
-                        # notDate += 1
-                        fields[1][int(f-1)]+= 1
+
+    for i in range(len(demo.index)):
+        if demo.loc[i, "dec"] == 1:
+            f = demo.loc[i, "field_cd"]
+            if demo.loc[i, "same_field"] == 1 and not math.isnan(f):
+                fields[0][int(f-1)]+= 1
+            elif not math.isnan(f):
+                fields[1][int(f-1)]+= 1
     return np.asarray(fields)
 
 '''
@@ -122,29 +138,39 @@ returns information as list containing number of people who would go on another
  date with someone of the same occupation and the number of people who would not go on another
 date with someone of the same occupation
 '''
-def sameOCCKaggleAll(demo, career):
+def sameOCCKaggleAll(demo):
 
     #first row is date
     #second row is not date
     #columns are the occupations
+    # dateAgain = 0
+    # notDate = 0
+    #
+    # occupations = np.zeros((2,17))
+    # for i in range(len(demo)):
+    #     id = demo.loc[i, "iid"]
+    #     occ =  demo.loc[i, "career_c"]
+    #     if not math.isnan(id) and  not math.isnan(occ):
+    #
+    #         colname = str(int(occ))+"_decision"
+    #         for j in range(len(career)):
+    #             #finding the person by their id in the career table
+    #             if career.loc[j,"iid"] == id:
+    #                 #finding if they would date the person with the same career
+    #                 if career.loc[j,colname] > 0.5 :
+    #                     dateAgain += 1
+    #                 elif not math.isnan(career.loc[j,colname]):
+    #                     notDate += 1
+
+    ####pandas
     dateAgain = 0
     notDate = 0
+    for i in range(len(demo.index)):
+        if demo.loc[i, "dec"] == 1:
+            dateAgain+= demo.loc[i, "same_career"]
+            notDate += 1 - demo.loc[i, "same_career"]
 
-    occupations = np.zeros((2,17))
-    for i in range(len(demo)):
-        id = demo.loc[i, "iid"]
-        occ =  demo.loc[i, "career_c"]
-        if not math.isnan(id) and  not math.isnan(occ):
 
-            colname = str(int(occ))+"_decision"
-            for j in range(len(career)):
-                #finding the person by their id in the career table
-                if career.loc[j,"iid"] == id:
-                    #finding if they would date the person with the same career
-                    if career.loc[j,colname] > 0.5 :
-                        dateAgain += 1
-                    elif not math.isnan(career.loc[j,colname]):
-                        notDate += 1
     return [dateAgain, notDate]
 '''
 counts the number of people in the Census dataset who married someone
@@ -198,23 +224,33 @@ returns information as list containing number of people who would go on another
  date with someone of the same field and the number of people who would not go on another
 date with someone of the same field
 '''
-def sameFieldKaggleAll(demo, field):
+def sameFieldKaggleAll(demo):
+    # dateAgain = 0
+    # notDate = 0
+    # for i in range(len(demo)):
+    #     id = demo.loc[i, "iid"]
+    #     f =  demo.loc[i, "field_cd"]
+    #     if not math.isnan(id) and  not math.isnan(f):
+    #
+    #         colname = str(int(f))+"_decision"
+    #         for j in range(len(field)):
+    #             #finding the person by their id in the career table
+    #             if field.loc[j,"iid"] == id:
+    #                 #finding if they would date the person with the same career
+    #                 if field.loc[j,colname] > 0.5:
+    #                     dateAgain += 1
+    #                 elif not math.isnan(field.loc[j,colname]):
+    #                     notDate += 1
+
+    ##pandas
     dateAgain = 0
     notDate = 0
-    for i in range(len(demo)):
-        id = demo.loc[i, "iid"]
-        f =  demo.loc[i, "field_cd"]
-        if not math.isnan(id) and  not math.isnan(f):
+    for i in range(len(demo.index)):
+        if demo.loc[i, "dec"] == 1:
+            dateAgain+= demo.loc[i, "same_field"]
+            notDate += 1 - demo.loc[i, "same_field"]
 
-            colname = str(int(f))+"_decision"
-            for j in range(len(field)):
-                #finding the person by their id in the career table
-                if field.loc[j,"iid"] == id:
-                    #finding if they would date the person with the same career
-                    if field.loc[j,colname] > 0.5:
-                        dateAgain += 1
-                    elif not math.isnan(field.loc[j,colname]):
-                        notDate += 1
+
     return [dateAgain, notDate]
 
 #####################################################################################################################################
@@ -229,15 +265,18 @@ if __name__=='__main__':
         return data
 
     dfC = load_file("census_stuff.db", "SELECT * FROM people")
-    dfK = load_file("kaggle_clean.db", "SELECT * FROM demographics")
-    dfKCareer = load_file("kaggle_clean.db", "SELECT * FROM career")
-    dfKField = load_file("kaggle_clean.db", "SELECT * FROM field_of_study")
+    # # dfK = load_file("kaggle_clean.db", "SELECT * FROM demographics")
+    # dfKCareer = load_file("kaggle_clean.db", "SELECT * FROM career")
+    # dfKField = load_file("kaggle_clean.db", "SELECT * FROM field_of_study")
+
+    dfK = pd.read_csv('Kaggle_Data-Individual_Dates_Clean.csv')
+    # print(dfKaggle)
 
 ##############################################################################################
 #Chi-squared test comparing the number of people who marry the same occupation in both datasets
 ##############################################################################################
 
-    obsKO = sameOCCKaggleAll(dfK, dfKCareer)
+    obsKO = sameOCCKaggleAll(dfK)
     obsCO = sameOCCCensusAll(dfC)
     obsO = np.array((obsKO,obsCO))
     chi2, p, dof, expected = stats.chi2_contingency(obsO)
@@ -247,7 +286,7 @@ if __name__=='__main__':
 ##############################################################################################
 #Chi-squared test comparing the number of people who marry the same field in both datasets
 ##############################################################################################
-    obsKF = sameFieldKaggleAll(dfK, dfKField)
+    obsKF = sameFieldKaggleAll(dfK)
     obsCF = sameFieldCensusAll(dfC)
     obsF = np.array((obsKF,obsCF))
     chi2, p, dof, expected = stats.chi2_contingency(obsF)
@@ -260,7 +299,7 @@ if __name__=='__main__':
     people who would data/marry same occupation and row 1 stores the number of
     people who would data/marry different occupation
     '''
-    sameOccupationKaggle = sameOCCKaggle(dfK, dfKCareer)
+    sameOccupationKaggle = sameOCCKaggle(dfK)
     sameOccupationCensus = sameOCCCensus(dfC)
 
 
@@ -299,7 +338,7 @@ if __name__=='__main__':
     people who would data/marry same major and row 1 stores the number of
     people who would data/marry different major
     '''
-    sameFKaggle = sameFieldKaggle(dfK, dfKField)
+    sameFKaggle = sameFieldKaggle(dfK)
     sameFCensus = sameFieldCensus(dfC)
 
     print("Chi squared tests comparing proportion of each field with the proportion from the Kaggle dataset")
@@ -340,10 +379,10 @@ if __name__=='__main__':
 ##############################################################################################
 #graphs for fields
 
-    sameFKaggle = sameFieldKaggle(dfK, dfKField)
+    sameFKaggle = sameFieldKaggle(dfK)
     sameFCensus = sameFieldCensus(dfC)
 
-    obsKF = sameFieldKaggleAll(dfK, dfKField)
+    obsKF = sameFieldKaggleAll(dfK)
     obsCF = sameFieldCensusAll(dfC)
     #field
     labels = [x for x in range(1,19)]
@@ -365,7 +404,7 @@ if __name__=='__main__':
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('Number of People')
     ax.set_xlabel('Fields')
-    ax.set_title('Compare interest Kaggle Dataset from same Field')
+    ax.set_title('Effect of Field of Study on Initial Attraction using Kaggle Dataset')
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.legend()
@@ -401,7 +440,7 @@ if __name__=='__main__':
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax2.set_ylabel('Number of People')
     ax2.set_xlabel('Fields')
-    ax2.set_title('Compare interest Census Dataset from same Field')
+    ax2.set_title('Effect of Field of Study on Marriage using Census Dataset')
     ax2.set_xticks(x)
     ax2.set_xticklabels(labels)
     ax2.legend()
@@ -416,10 +455,10 @@ if __name__=='__main__':
 #occupation
 #######################################################################################
 
-    sameOccKaggle = sameOCCKaggle(dfK, dfKCareer)
+    sameOccKaggle = sameOCCKaggle(dfK)
     sameOccCensus = sameOCCCensus(dfC)
     obsCO = sameOCCCensusAll(dfC)
-    obsKO = sameOCCKaggleAll(dfK, dfKCareer)
+    obsKO = sameOCCKaggleAll(dfK)
 
     labels = [x for x in range(1,18)]
     same = sameOccKaggle[0,:]
@@ -440,7 +479,7 @@ if __name__=='__main__':
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('Number of People')
     ax.set_xlabel('Occupations')
-    ax.set_title('Compare interest Kaggle Dataset from same occupation')
+    ax.set_title('Effect of Intended Career on Initial Attraction using Kaggle Dataset')
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.legend()
@@ -466,7 +505,7 @@ if __name__=='__main__':
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax2.set_ylabel('Number of People')
     ax2.set_xlabel('Occupations')
-    ax2.set_title('Compare interest Census Dataset from same occupation')
+    ax2.set_title('Effect of Career on Marriage using Census Dataset')
     ax2.set_xticks(x)
     ax2.set_xticklabels(labels)
     ax2.legend()
@@ -496,7 +535,7 @@ if __name__=='__main__':
 
     ax3.set_ylabel('Number of People')
     ax3.set_xlabel('Dataset')
-    ax3.set_title('Compare Census to Kaggle from same occupation')
+    ax3.set_title('Compare effect Occupation on Initial Attraction and Marriage')
     ax3.set_xticks(x)
     ax3.set_xticklabels(labels)
     ax3.legend()
@@ -526,7 +565,7 @@ if __name__=='__main__':
 
     ax4.set_ylabel('Number of People')
     ax4.set_xlabel('Dataset')
-    ax4.set_title('Compare Census to Kaggle from same field')
+    ax4.set_title('Compare effect of Field on Initial Attraction and Marriage')
     ax4.set_xticks(x)
     ax4.set_xticklabels(labels)
     ax4.legend()
