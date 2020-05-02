@@ -43,14 +43,16 @@ function generate() {
         // text += x.elements[i].value + "<br>";
         // console.log(text);
     }
-
+    //makes the results show up
     document.getElementById('results').style.visibility = 'visible';
 
+    //sets the name of person 1 and person 2 in the results
     document.getElementById('p1').innerHTML=p1_name;
     document.getElementById('p2').innerHTML=p2_name;
     document.getElementById('p11').innerHTML=p1_name;
     document.getElementById('p22').innerHTML=p2_name;
 
+    //sets the results of person 1
     document.getElementById("p1Attract").value = p1_results[0];
     document.getElementById('p1AtextInput').innerHTML=p1_results[0];
     document.getElementById("p1Like").value = p1_results[1];
@@ -58,6 +60,7 @@ function generate() {
     document.getElementById("p1Date").value = p1_results[2];
     document.getElementById('p1DtextInput').innerHTML=p1_results[2];
 
+    //sets the results of person 2
     document.getElementById("p2Attract").value = p2_results[0];
     document.getElementById('p2AtextInput').innerHTML=p2_results[0];
     document.getElementById("p2Like").value = p2_results[1];
@@ -66,5 +69,5 @@ function generate() {
     document.getElementById('p2DtextInput').innerHTML=p2_results[2];
 
 
-    document.getElementById("evaluation_results").innerHTML = p1_result_string + "<br>"+ p2_result_string;
+    // document.getElementById("evaluation_results").innerHTML = p1_result_string + "<br>"+ p2_result_string;
 }
