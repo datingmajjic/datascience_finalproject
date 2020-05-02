@@ -44,6 +44,8 @@ function generate() {
         // console.log(text);
     }
 
+    document.getElementById('results').style.visibility = 'visible';
+
     document.getElementById('p1').innerHTML=p1_name;
     document.getElementById('p2').innerHTML=p2_name;
     document.getElementById('p11').innerHTML=p1_name;

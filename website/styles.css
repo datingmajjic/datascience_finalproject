@@ -20,7 +20,6 @@ body {
     margin:auto;
     border-radius: 20px;
     margin-top: 30px;
-    margin-bottom: 30px;
 }
 
 .formsection{
@@ -69,13 +68,25 @@ body {
     width:75%;
     margin:auto;
     margin-top: 30px;
-    margin-bottom: 30px;
+}
+.results{
+    /* display:none; */
+    visibility: hidden;
+    background-color: #B9D6F3;
+    border-radius: 20px;
+    padding:10px;
+
+    width:75%;
+    margin:auto;
+    margin-top: 30px;
 }
 .submitbutton{
   background-color:#E2A9BE;
   border-radius: 10px;
-  padding:10px 20px;
+  padding:10px 40px;
   font-size: 20px;
+  font-family: "Times New Roman", Times, serif;
+  margin-bottom: 10px;
 }
 
 .person_two {
@@ -119,6 +130,13 @@ body {
 .innerResultBlock{
   margin-left: 10%;
   margin-right: 5%;
+}
+.resultText{
+  margin:auto;
+  border-radius:30px;
+  background-color: #F1E8D9;
+  width: 25px;
+  padding: 5px;
 }
 
 input[type=range]{
