@@ -5,21 +5,30 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Dating MAJJic</h1>
-    <h4> By Alan, Joseph, Jenny, Milla</h4>
-    <p> Hi everyone. This is our super cool project. Please input your
-    information and also your partner's! This is exciting. It will tell you
-    cooooool things :)</p>
-
+    <!-- <div class = "header">
+      <h1>Dating MAJJic</h1>
+      <h4> By Alan, Joseph, Jenny, Milla</h4>
+      <p> Hi everyone. This is our super cool project. Please input your
+      information and also your partner's! This is exciting. It will tell you
+      cooooool things :)</p>
+    </div> -->
+    <div class = "header">
+      <h1>Want to find out your compatibility with your partner?</h1>
+      <h4> By Alan, Joseph, Jenny, Milla</h4>
+      <p> Take our quiz to find out!</p>
+    </div>
     <div class="overallcontainer">
          <form id="myform"   method="POST" >
             <div class="form-container">
+              <label style = "padding:20px;padding-bottom: 0px;"><b>Tell us about you and your partner </b></label>
                 <div  class='formsection'>
                     <div class = 'column'>
                         <div class = "person_one">
+                          <div class = "left">
+                            <img src="girl.png" alt="" class = "profileIcon">
+                          </div>
+                          <div class = "right">
                             <h2>Person 1</h2>
-                            <p>Please fill in this form .</p>
-                            <hr>
 
                             <label for="p1_name"><b>Name</b></label> </br>
                             <input type="text" placeholder="Enter name" name="p1_name" > </br>
@@ -69,6 +78,7 @@
                             </br>
 
                             <label for="p1_career"><b>Intended Career</b></label> </br>
+
                             <select class = "select-options" name= "p1_career">
                                <option value = "1">Lawyer</option>
                                <option value = "2">Academic/Research </option>
@@ -88,17 +98,19 @@
                                <option value = "16"> Journalism</option>
                                <option value = "17">Architecture</option>
                              </select>
-                            </br>
 
-                            <hr>
+                            </br>
+                        </div>
                         </div>
                     </div>
 
                     <div class = 'column'>
                         <div class = "person_two">
+                          <div class = "left">
+                            <img src="man.png" alt="" class = "profileIcon">
+                          </div>
+                          <div class = "right">
                             <h2>Person 2</h2>
-                            <p>Please fill in this form .</p>
-                            <hr>
 
                             <label for="p2_name"><b>Name</b></label> </br>
                             <input type="text" placeholder="Enter name" name="p2_name" > </br>
@@ -168,12 +180,11 @@
                                <option value = "17">Architecture</option>
                              </select>
                             </br>
-
-                            <hr>
                         </div>
+                      </div>
                     </div>
                 </div>
-
+              </div>
                 <div class = 'formsection'>
                     <div class = 'submission'>
                         <p>Click to generate scores</p>
@@ -182,13 +193,139 @@
                 </div>
 
                 <p id="evaluation_results"> </p>
+                <div class = 'formsection' >
+                    <div class = 'submission'>
+                        <h2>Results</h2>
+                        <div  class='formsection'>
+                            <div class = 'column1'>
+                                <div class = "result_block">
+                                  <div class = "horizontal">
+                                    <div class = "vertical">
+                                      <div><img src="man.png" alt="" class = "profileIcon"></div>
+                                      <div id="p1"></div>
+                                    </div>
+                                    <div style= "margin-top: auto; margin-bottom:auto;"> will rate </div>
+                                    <div class = "vertical">
+                                      <div><img src="girl.png" alt="" class = "profileIcon"></div>
+                                      <div id="p2"></div>
+                                    </div>
+                                  </div>
+                                  <div class = "innerResultBlock">
+                                  <div class = "horizontal1">
+                                    <!-- <img src="heart.png" alt="" class = "icon"> -->
+                                    <div style= "margin-top: auto; margin-bottom:auto; width: 40%; text-align: left;"> Attractiveness Score: </div>
+                                    <div id="p1AtextInput" style="margin: auto;"></div>
+                                    <input style = "margin-left: auto" type="range" id="p1Attract" min="0" max="10">
+                                  </div>
+                                  <div class = "horizontal1">
+                                    <!-- <img src="like.png" alt="" class = "icon"> -->
+                                    <div style= "margin-top: auto; margin-bottom:auto; width: 40%; text-align: left;"> Likeability Score: </div>
+                                    <div id="p1LtextInput" style= "margin: auto; "></div>
+                                  <input style = "margin-left: auto" type="range" id="p1Like" min="0" max="10">
+                                  </div>
+                                  <div class = "horizontal1">
+                                  <!-- <img src="friends.png" alt="" class = "icon"> -->
+                                  <div style= "margin-top: auto; margin-bottom:auto; width: 40%; text-align: left;"> Likelihood of going on a second date: </div>
+                                  <div id="p1DtextInput" style= "margin: auto;"></div>
+                                  <input style = "margin-left: auto" type="range" id="p1Date" min="0" max="10">
+                                  </div>
+                                </div>
+                                </div>
+                                <div class = "result_block">
+                                  <div class = "horizontal">
+                                    <div class = "vertical">
+                                      <div><img src="girl.png" alt="" class = "profileIcon"></div>
+                                      <div id = "p22"></div>
+                                    </div>
+                                    <div style= "margin-top: auto; margin-bottom:auto;"> will rate </div>
+                                    <div class = "vertical">
+                                      <div><img src="man.png" alt="" class = "profileIcon"></div>
+                                      <div id = "p11"></div>
+                                    </div>
+                                  </div>
+                                  <div class = "innerResultBlock">
+                                  <div class = "horizontal1">
+                                    <!-- <img src="heart.png" alt="" class = "icon"> -->
+                                    <div style= "margin-top: auto; margin-bottom:auto; width: 40%; text-align: left;"> Attractiveness Score: </div>
+                                    <div id="p2AtextInput" style="margin: auto;"></div>
+                                    <input style = "margin-left: auto" type="range" id="p2Attract" min="0" max="10">
+                                  </div>
+                                  <div class = "horizontal1">
+                                    <!-- <img src="like.png" alt="" class = "icon"> -->
+                                    <div style= "margin-top: auto; margin-bottom:auto; width: 40%; text-align: left;"> Likeability Score: </div>
+                                    <div id="p2LtextInput" style= "margin: auto; "></div>
+                                  <input style = "margin-left: auto" type="range" id="p2Like" min="0" max="10">
+                                  </div>
+                                  <div class = "horizontal1">
+                                  <!-- <img src="friends.png" alt="" class = "icon"> -->
+                                  <div style= "margin-top: auto; margin-bottom:auto; width: 40%; text-align: left;"> Likelihood of going on a second date: </div>
+                                  <div id="p2DtextInput" style= "margin: auto;"></div>
+                                  <input style = "margin-left: auto" type="range" id="p2Date" min="0" max="10">
+                                  </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <input type="range" name="rangeInput" min="0" max="100" onchange="updateTextInput(this.value);">
+                        <input type="text" id="textInput" value=""> -->
+                        <!-- <div class = 'person_result'> Person 1
+                            <div>
+                              <div class = "horizontal">
+                                <img src="heart.png" alt="" class = "icon">
+                                Attractiveness Score: <div id="p1AtextInput"></div>
+                                <input type="range" id="p1Attract" min="0" max="10">
+                              </div>
+                            </div>
+                            <div>
+                              <div class = "horizontal">
+                                <img src="like.png" alt="" class = "icon">
+                                Likeability Score: <div id="p1LtextInput"></div>
+                              <input type="range" id="p1Like" min="0" max="10">
+                              </div>
+                            </div>
+                            <div>
+                              <div class = "horizontal">
+                              <img src="friends.png" alt="" class = "icon">
+                              Likelihood of going on a second date:
+                              <div id="p1DtextInput"></div>
+                              <input type="range" id="p1Date" min="0" max="10">
+                              </div>
+                            </div>
+                        </div> -->
+                        <!-- <div class = 'person_result'> Person 2
+                            <div>
+                              <div class = "horizontal">
+                              Attractiveness Score:
+                              <div id="p2AtextInput"></div>
+                              <input type="range" id="p2Attract" min="0" max="10">
+                            </div>
+                          </div>
+                            <div>
+                              <div class = "horizontal">
+                              Likeability Score:
+                              <div id="p2LtextInput"></div>
+                              <input type="range" id="p2Like" min="0" max="10">
+                            </div>
+                          </div>
+                            <div>
+                              <div class = "horizontal">
+                              Likelihood of going on a second date:
+                              <div id="p2DtextInput"></div>
+                              <input type="range" id="p2Date" min="0" max="10">
+                            </div>
+                          </div>
+                        </div> -->
+                    </div>
+                </div>
 
 
-            </div>
+
         </form>
+        <div style = "font-size: 10px">Icons made by <a href="https://www.flaticon.com/authors/popcorns-arts" title="Icon Pond">Icon Pond</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+        <div style = "font-size: 10px">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
     </div>
-    <script async src="./index.js"></script>
-
+      <script async src="./index.js"></script>
+      <script async src="./range.js"></script>
   </body>
 
 </html>
