@@ -60,11 +60,10 @@ kaggle_df$same_career <- factor(kaggle_df$same_career)
 
 write_xlsx(kaggle_df, "Kaggle_Data - Individual_Dates_Clean.xlsx")
 
-# Linear Regression Code
-summary(lm(like ~ same_field + samerace + gender + field_cd + field_cd_o + race + race_o, data = kaggle_df))
-summary(lm(like ~ same_career + samerace + gender + career_c + career_c_o + race + race_o, data = kaggle_df))
+# Linear/Logistic Regression Code
+summary(lm(attr ~ gender + same_field + samerace + same_career + field_cd + field_cd_o + race + race_o + career_c + career_c_o, 
+           data = kaggle_df, binomial))
 
-# Logistic Regression Code
 log_r <- glm(dec ~ same_field + samerace + gender + field_cd + field_cd_o + race + race_o, data = kaggle_df, binomial)
 log_r <- glm(dec ~ same_career + samerace + gender + career_c + career_c_o + race + race_o, data = kaggle_df, binomial)
 summary(log_r)
@@ -72,22 +71,22 @@ exp(coef(log_r))
 
 # Figure generation and hypothesis testing
 cmpr_kaggle <- list(c("Same Career", "Different Career"))
-ggplot(data = kaggle_df, aes(x = same_career, y = like, fill = same_career)) + 
-  geom_violin(adjust = 1.2, trim = FALSE, width = 0.5) + 
-  geom_boxplot(width = 0.2, color = "black", fill = "white") + 
+ggplot(data = kaggle_df, aes(x = same_career, y = like, fill = same_career)) +
+  geom_boxplot(width = 0.3, color = "black") + 
   ylim(0, 13) + xlab("") + ylab("Likeability Score") + scale_fill_discrete(name = "") +
   stat_compare_means(comparisons = cmpr_kaggle, tip.length=0.01,
                      method = "t.test", label = "p.signif", label.y = c(12),
                      symnum.args = list(cutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1), symbols = c("****", "***", "**", "*", "ns"))) +
-  scale_color_npg() + theme_bw()
-dev.print(png, filename="Box and Violin Plot - Likeability (Same Career).png", units="in", height=5, width=5, res=300)
+  scale_color_npg() + theme_bw() + theme(axis.title = element_text(size=15), axis.text = element_text(size=15),
+                                       legend.text = element_text(size=15), legend.position = "none")
+dev.print(png, filename="Box Plot - Likeability (Same Major).png", units="in", height=5, width=5, res=300)
 
 t.test(kaggle_df[kaggle_df$same_career == "Different Career", ]$like, kaggle_df[kaggle_df$same_career == "Same Career", ]$like)
 
-cmpr_race <- list(c("Same Race", "Different Race"))
-ggplot(data = kaggle_df,  aes(x =  samerace, y = int_corr, fill = samerace)) +
-  geom_violin(adjust = 1.2, trim = FALSE, width = 0.5) + 
-  geom_boxplot(width = 0.2, color = "black", fill = "white") +
+# geom_violin(adjust = 1.2, trim = FALSE, width = 0.5) + 
+cmpr_race <- list(c("Same Major", "Different Major"))
+ggplot(data = kaggle_df,  aes(x = same_field, y = attr, fill = same_field)) +
+  geom_boxplot(width = 0.2, color = "black") +
   ylim(-1, 1.3) + xlab("") + ylab("Shared Interest Correlation") + scale_fill_discrete(name = "") +
   stat_compare_means(comparisons = cmpr_race, tip.length=0.01,
                      method = "t.test", label = "p.signif", label.y = c(1.2),
@@ -121,7 +120,7 @@ proportions_df <- data.frame(same = c("Same Major", "Same Career", "Same Major",
 
 ggplot(proportions_df, aes(x = data, y = proportions, fill = same)) + geom_bar(position = "dodge", stat="identity", width=0.5) +
   xlab("") + ylab("Proportion of Individuals Married/Attracted") + scale_fill_discrete("") +
-  scale_color_npg() + theme_bw()
+  scale_color_npg() + theme_bw() 
 dev.print(png, filename="Bar Plot - Proportion Kaggle vs. Census.png", units="in", height=5, width=5, res=300)
 
 nrow(kaggle_df[kaggle_df$same_field == "Different Major" & kaggle_df$dec == 1, ]) / 
@@ -147,8 +146,13 @@ t.test(diff_field_df$attr, same_field_df$attr)
 t.test(diff_field_df$like, same_field_df$like)
 
 ggplot(said_yes_career_df, aes(same_field, yes_proportion, fill=same_field)) + geom_col(width=0.5) +
-  xlab("") + ylab("Proportion of 'Yes to Second-Date'") + scale_fill_discrete(name = "") +
-  scale_color_npg() + theme_bw()
-dev.print(png, filename="Bar Plot - Proportion of Second Date (Career).png", units="in", height=5, width=5, res=300)
+  xlab("") + ylab("Proportion of 'Yes to Second-Date\n") + scale_fill_discrete(name = "") + ylim(0, 0.5) +
+  scale_color_npg() + theme_bw() + theme(axis.title = element_text(size=15), axis.text = element_text(size=15),
+                                         legend.text = element_text(size=15), legend.position = "none")
+
++ 
+  geom_signif(comparisons = list(c("Different Major", "Same Major")), 
+                                               map_signif_level=TRUE, annotation = c("***"), y_position = c(0.5))
+dev.print(png, filename="Bar Plot - Proportion of Second Date (Career).png", units="in", height=5, width=7, res=300)
 
 
